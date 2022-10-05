@@ -31,7 +31,7 @@ const ListSelector = () => {
     return (
         <div id="playlist-selector">
             <div id="list-selector-list">
-            <div id="playlist-selector-heading">
+            <div id="playlist-selector-heading"  style={{fontSize:"xxx-large", height: 60}} >
                 <input
                     type="button"
                     id="add-list-button"
