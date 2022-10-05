@@ -9,6 +9,7 @@ export const GlobalStoreContext = createContext({});
     @author McKilla Gorilla
 */
 // 何日天
+// 何再次日天
 // THESE ARE ALL THE TYPES OF UPDATES TO OUR GLOBAL
 // DATA STORE STATE THAT CAN BE PROCESSED
 export const GlobalStoreActionType = {
