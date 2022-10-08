@@ -16,7 +16,11 @@ const ListSelector = () => {
     }, []);
 
     function handleCreateNewList() {
-        store.createNewList();
+        let newlist = {
+            name: "Untiled",
+            songs: []
+        };
+        store.createNewList(newlist);
     }
     let listCard = "";
     if (store) {

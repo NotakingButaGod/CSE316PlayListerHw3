@@ -62,8 +62,8 @@ export const useGlobalStore = () => {
             // CREATE A NEW LIST
             case GlobalStoreActionType.CREATE_NEW_LIST: {
                 return setStore({
-                    idNamePairs: store.idNamePairs,
-                    currentList: payload,
+                    idNamePairs: payload.idNamePairs,
+                    currentList: payload.playlist,
                     newListCounter: store.newListCounter + 1,
                     listNameActive: false
                 })
@@ -113,8 +113,26 @@ export const useGlobalStore = () => {
     // RESPONSE TO EVENTS INSIDE OUR COMPONENTS.
 
     // THIS FUNCTION PROCESSES CHANGING A LIST NAME
-    store.createNewList = function() {
-        
+    store.createNewList = function(newplaylist) {
+        async function asyncCreateNewList(newplaylist){
+            let response = await api.createNewPlaylists(newplaylist);
+            if(response.data.success){
+                console.log(response);
+                let playlist = response.data.playlist;
+                let pair = store.idNamePairs;
+                pair.push(playlist);
+                storeReducer({
+                    type: GlobalStoreActionType.CREATE_NEW_LIST,
+                    payload : {
+                        idNamePairs: pair,
+                        playlist : playlist
+                    }
+                });
+                
+            }
+            // update the playlist
+        }
+        asyncCreateNewList(newplaylist);
     }
 
     store.changeListName = function (id, newName) {
@@ -122,7 +140,7 @@ export const useGlobalStore = () => {
         async function asyncChangeListName(id) {
             let response = await api.getPlaylistById(id);
             if (response.data.success) {
-                let playlist = response.data.playist;
+                let playlist = response.data.playlist;
                 playlist.name = newName;
                 async function updateList(playlist) {
                     response = await api.updatePlaylistById(playlist._id, playlist);

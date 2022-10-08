@@ -63,13 +63,14 @@ body {
 }
 
 #playlist-selector, #playlist-cards {
-  overflow: scroll;
   grid-column: 1 / 3;
   grid-row: 2 / 3;
   display:grid;
   background-color: var(--swatch-primary);
+  height: 80%;
+  overflow: scroll;
+  
 }
-
 
 .playlister-button, .playlister-button-disabled {
   font-size:36pt;

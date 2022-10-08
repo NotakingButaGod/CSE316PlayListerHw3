@@ -23,7 +23,7 @@ createPlaylist = (req, res) => {
     if (!playlist) {
         return res.status(400).json({ success: false, error: err })
     }
-
+    
     playlist
         .save()
         .then(() => {
