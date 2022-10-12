@@ -40,6 +40,10 @@ createPlaylist = (req, res) => {
             })
         })
 }
+deletePlaylist= (req, res) => {
+    
+}
+
 getPlaylistById = async (req, res) => {
     await Playlist.findOne({ _id: req.params.id }, (err, list) => {
         if (err) {

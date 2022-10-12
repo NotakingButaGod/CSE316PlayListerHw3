@@ -113,7 +113,8 @@ export const useGlobalStore = () => {
     // RESPONSE TO EVENTS INSIDE OUR COMPONENTS.
 
     // THIS FUNCTION PROCESSES CHANGING A LIST NAME
-    store.createNewList = function(newplaylist) {
+    store.createNewList = async function(newplaylist) {
+        
         async function asyncCreateNewList(newplaylist){
             let response = await api.createNewPlaylists(newplaylist);
             if(response.data.success){
@@ -131,8 +132,11 @@ export const useGlobalStore = () => {
                 
             }
             // update the playlist
+            return response.data.playlist._id;
         }
-        asyncCreateNewList(newplaylist);
+        let getid = await asyncCreateNewList(newplaylist);
+        return getid;
+        
     }
 
     store.changeListName = function (id, newName) {

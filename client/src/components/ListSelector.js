@@ -15,12 +15,15 @@ const ListSelector = () => {
         store.loadIdNamePairs();
     }, []);
 
-    function handleCreateNewList() {
+    async function handleCreateNewList() {
         let newlist = {
-            name: "Untiled",
+            name: "Untitled",
             songs: []
         };
-        store.createNewList(newlist);
+        let getid = await store.createNewList(newlist);
+        console.log(getid);
+        store.history.push("/playlist/" + getid);
+        
     }
     let listCard = "";
     if (store) {
