@@ -41,30 +41,6 @@ createPlaylist = (req, res) => {
         })
 }
 
-createNewSong = async (req, res) => {
-    await Playlist.findOne({ _id: req.params.id }, (err, list) => {
-        if (err) {
-            return res.status(400).json({ success: false, error: err })
-        }
-        list.songs.push(req.body);
-        list
-        .save()
-        .then(() => {
-            return res.status(201).json({
-                success: true,
-                playlist: list,
-                message: 'Song Created!',
-            })
-        })
-        .catch(error => {
-            return res.status(400).json({
-                error,
-                message: 'Song Not Created!',
-            })
-        })
-    }).catch(err => console.log(err))
-}
-
 deletePlaylist= async (req, res) => {
     await Playlist.findOneAndDelete({ _id: req.params.id }, (err, list) => {
         if (err) {
@@ -135,7 +111,6 @@ getPlaylistPairs = async (req, res) => {
 
 module.exports = {
     createPlaylist,
-    createNewSong,
     deletePlaylist,
     updatePlaylist,
     getAllPlaylists,

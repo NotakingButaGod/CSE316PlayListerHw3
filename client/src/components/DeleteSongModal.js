@@ -9,9 +9,10 @@ function DeleteSongModal(props){
     }
     //console.log(store.idNamePairs_toDelete);
     function handleConfirmDeleteSong(){
-        store.deleteSong(store.idNamePairs_toDelete._id, store.song_toDelete_index);
-        let modal = document.getElementById("delete-song-modal");
-        modal.classList.remove("is-visible");
+        //store.deleteSong(store.idNamePairs_toDelete._id, store.song_toDelete_index);
+        //let modal = document.getElementById("delete-song-modal");
+        //modal.classList.remove("is-visible");
+        store.addDeleteSongTransaction();
     }
 
     function handleCancelDeleteSong(){

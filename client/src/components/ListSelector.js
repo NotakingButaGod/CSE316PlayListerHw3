@@ -25,6 +25,7 @@ const ListSelector = () => {
         store.history.push("/playlist/" + getid);
         
     }
+
     let listCard = "";
     if (store) {
         listCard = store.idNamePairs.map((pair) => (

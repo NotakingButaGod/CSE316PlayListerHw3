@@ -26,7 +26,8 @@ function EditToolbar() {
     function handleAddSong(event) {
         event.stopPropagation();
         let newSong = {title : "Untitled", artist : "Unknown", youTubeId: "dQw4w9WgXcQ"};
-        store.createNewSong(store.currentList._id, newSong);
+        //store.createNewSong(store.currentList._id, newSong);
+        store.addAddSongTransaction(store.currentList._id, newSong);
     }
     let editStatus = false;
     if (store.isListNameEditActive) {
