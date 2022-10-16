@@ -40,8 +40,49 @@ createPlaylist = (req, res) => {
             })
         })
 }
-deletePlaylist= (req, res) => {
-    
+
+createNewSong = async (req, res) => {
+    await Playlist.findOne({ _id: req.params.id }, (err, list) => {
+        if (err) {
+            return res.status(400).json({ success: false, error: err })
+        }
+        list.songs.push(req.body);
+        list
+        .save()
+        .then(() => {
+            return res.status(201).json({
+                success: true,
+                playlist: list,
+                message: 'Song Created!',
+            })
+        })
+        .catch(error => {
+            return res.status(400).json({
+                error,
+                message: 'Song Not Created!',
+            })
+        })
+    }).catch(err => console.log(err))
+}
+
+deletePlaylist= async (req, res) => {
+    await Playlist.findOneAndDelete({ _id: req.params.id }, (err, list) => {
+        if (err) {
+            return res.status(400).json({ success: false, error: err })
+        }
+        
+        return res.status(200).json({ success: true, playlist: list })
+    }).catch(err => console.log(err))
+}
+
+updatePlaylist = async (req, res) => {
+    await Playlist.findOneAndUpdate({ _id: req.params.id }, req.body, (err, list) => {
+        if (err) {
+            return res.status(400).json({ success: false, error: err })
+        }
+        
+        return res.status(200).json({ success: true, playlist: list })
+    }).catch(err => console.log(err))
 }
 
 getPlaylistById = async (req, res) => {
@@ -53,7 +94,7 @@ getPlaylistById = async (req, res) => {
         return res.status(200).json({ success: true, playlist: list })
     }).catch(err => console.log(err))
 }
-getPlaylists = async (req, res) => {
+getAllPlaylists = async (req, res) => {
     await Playlist.find({}, (err, playlists) => {
         if (err) {
             return res.status(400).json({ success: false, error: err })
@@ -94,7 +135,10 @@ getPlaylistPairs = async (req, res) => {
 
 module.exports = {
     createPlaylist,
-    getPlaylists,
+    createNewSong,
+    deletePlaylist,
+    updatePlaylist,
+    getAllPlaylists,
     getPlaylistPairs,
     getPlaylistById
 }
