@@ -31,7 +31,9 @@ export const GlobalStoreActionType = {
     MOVE_SONG: "MOVE_SONG",
     MARK_LIST_FOR_DELETION: "MARK_LIST_FOR_DELETION", 
     MARK_SONG_FOR_DELETION: "MARK_SONG_FOR_DELETION",
-    MARK_SONG_FOR_EDITION: "MARK_SONG_FOR_EDITION"
+    MARK_SONG_FOR_EDITION: "MARK_SONG_FOR_EDITION", 
+    SET_UNDO_AND_REDO_TRANSACTION: "SET_UNDO_AND_REDO_TRANSACTION"
+    
 }
 
 // WE'LL NEED THIS TO PROCESS TRANSACTIONS
@@ -46,9 +48,14 @@ export const useGlobalStore = () => {
         idNamePairs_toDelete: null,
         song_toDelete: null,
         song_toDelete_index: null,
+        idNamePairs_toEdit: null,
+        song_toEdit: null,
+        song_toEdit_index: null,
         currentList: null,
         newListCounter: 0,
-        listNameActive: false
+        listNameActive: false, 
+        hasUndo: false,
+        hasRedo: false
     });
 
     // HERE'S THE DATA STORE'S REDUCER, IT MUST
@@ -88,6 +95,8 @@ export const useGlobalStore = () => {
                     idNamePairs: payload.idNamePairs,
                     currentList: payload.playlist,
                     newListCounter: store.newListCounter,
+                    hasUndo: tps.hasTransactionToUndo(),
+                    hasRedo: tps.hasTransactionToRedo(),
                     listNameActive: false
                 })
             }
@@ -107,6 +116,8 @@ export const useGlobalStore = () => {
                     song_toDelete: null,
                     song_toDelete_index: null,
                     currentList: payload.playlist,
+                    hasUndo: tps.hasTransactionToUndo(),
+                    hasRedo: tps.hasTransactionToRedo(),
                     newListCounter: store.newListCounter,
                     listNameActive: false
                 });
@@ -118,6 +129,8 @@ export const useGlobalStore = () => {
                     song_toEdit: null,
                     song_toEdit_index: null,
                     currentList: payload.playlist,
+                    hasUndo: tps.hasTransactionToUndo(),
+                    hasRedo: tps.hasTransactionToRedo(),
                     newListCounter: store.newListCounter,
                     listNameActive: false
                 });
@@ -126,6 +139,8 @@ export const useGlobalStore = () => {
                 return setStore({
                     idNamePairs: payload.idNamePairs,
                     currentList: payload.playlist,
+                    hasUndo: tps.hasTransactionToUndo(),
+                    hasRedo: tps.hasTransactionToRedo(),
                     newListCounter: store.newListCounter,
                     listNameActive: false
                 });
@@ -191,7 +206,16 @@ export const useGlobalStore = () => {
                     listNameActive: true
                 });
             }
-
+            case GlobalStoreActionType.SET_UNDO_AND_REDO_TRANSACTION: {
+                return setStore({
+                    idNamePairs: store.idNamePairs,
+                    currentList: store.currentList,
+                    hasUndo: tps.hasTransactionToUndo(),
+                    hasRedo: tps.hasTransactionToRedo(),
+                    newListCounter: store.newListCounter,
+                    listNameActive: false
+                });
+            }
 
             default:
                 return store;
@@ -328,6 +352,7 @@ export const useGlobalStore = () => {
                                             playlist: playlist1
                                         }
                                 });
+                                
                                 console.log(playlist1)
                             }
                         }
@@ -465,6 +490,7 @@ export const useGlobalStore = () => {
 
     // THIS FUNCTION PROCESSES CLOSING THE CURRENTLY LOADED LIST
     store.closeCurrentList = function () {
+        tps.clearAllTransactions();
         storeReducer({
             type: GlobalStoreActionType.CLOSE_CURRENT_LIST,
             payload: {}
@@ -509,12 +535,45 @@ export const useGlobalStore = () => {
     store.getPlaylistSize = function() {
         return store.currentList.songs.length;
     }
+
     store.undo = function () {
-        tps.undoTransaction();
+        if (tps.hasTransactionToUndo()){
+            tps.undoTransaction();
+            console.log(store.currentList);
+            storeReducer({
+                type: GlobalStoreActionType.SET_UNDO_AND_REDO_TRANSACTION,
+                payload: null
+            });
+        }
+        
     }
     store.redo = function () {
-        tps.doTransaction();
+        if (tps.hasTransactionToRedo()) {
+            tps.doTransaction();
+            storeReducer({
+                type: GlobalStoreActionType.SET_UNDO_AND_REDO_TRANSACTION,
+                payload: null
+            });
+            
+        }
+        
     }
+    function handlekeydown(event){
+        if((event.metaKey || event.ctrlKey) && event.key === 'z'){
+            if(tps.hasTransactionToUndo()){
+                store.undo();
+            }
+            
+            //this.undo();
+        }
+        else if((event.metaKey || event.ctrlKey) && event.key === 'y'){
+            if(tps.hasTransactionToRedo()){
+                store.redo();
+            }
+        }
+    }
+    document.onkeydown = (event) => handlekeydown(event, this);
+
 
     // THIS FUNCTION ENABLES THE PROCESS OF EDITING A LIST NAME
     store.setIsListNameEditActive = function () {

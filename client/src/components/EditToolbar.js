@@ -8,17 +8,31 @@ import { useHistory } from 'react-router-dom'
     @author McKilla Gorilla
 */
 function EditToolbar() {
-    const { store } = useContext(GlobalStoreContext);
+    const {store} = useContext(GlobalStoreContext);
     const history = useHistory();
-
-    let enabledButtonClass = "playlister-button";
-
+    
+    let enabledAddSongButtonClass = "playlister-button";
+    let enabledCloseButtonClass = "playlister-button";
+    let enabledUndoButtonClass = "playlister-button";
+    let enabledRedoButtonClass = "playlister-button";
+    let canAddSong = store.currentList !== null ? true : false;
+    let canUndo = store.hasUndo ? true : false;
+    let canRedo = store.hasRedo ? true : false;
+    let canClose = store.currentList !== null ? true : false;
+    
+    
+    if (!canAddSong) enabledAddSongButtonClass += "-disabled";
+    if (!canClose) enabledCloseButtonClass += "-disabled";
+    if (!canUndo) enabledUndoButtonClass += "-disabled";
+    if (!canRedo) enabledRedoButtonClass += "-disabled";
+   
     function handleUndo() {
         store.undo();
     }
     function handleRedo() {
         store.redo();
     }
+    
     function handleClose() {
         history.push("/");
         store.closeCurrentList();
@@ -38,33 +52,35 @@ function EditToolbar() {
             <input
                 type="button"
                 id='add-song-button'
-                disabled={editStatus}
+                disabled={canAddSong ? false : true}
                 value="+"
-                className={enabledButtonClass}
+                className={enabledAddSongButtonClass}
                 onClick={handleAddSong}
             />
             <input
                 type="button"
                 id='undo-button'
-                disabled={editStatus}
+                disabled={canUndo ? false : true}
                 value="⟲"
-                className={enabledButtonClass}
+                className={enabledUndoButtonClass}
                 onClick={handleUndo}
+                onKeyDown={store.handlekeydown}
             />
             <input
                 type="button"
                 id='redo-button'
-                disabled={editStatus}
+                disabled={canRedo ? false : true}
                 value="⟳"
-                className={enabledButtonClass}
+                className={enabledRedoButtonClass}
                 onClick={handleRedo}
+                onKeyDown={store.handlekeydown}
             />
             <input
                 type="button"
                 id='close-button'
-                disabled={editStatus}
+                disabled={canClose ? false : true}
                 value="&#x2715;"
-                className={enabledButtonClass}
+                className={enabledCloseButtonClass}
                 onClick={handleClose}
             />
         </span>);

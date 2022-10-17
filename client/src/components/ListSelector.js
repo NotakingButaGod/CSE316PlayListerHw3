@@ -25,7 +25,7 @@ const ListSelector = () => {
         store.history.push("/playlist/" + getid);
         
     }
-
+    
     let listCard = "";
     if (store) {
         listCard = store.idNamePairs.map((pair) => (
@@ -45,6 +45,7 @@ const ListSelector = () => {
                     id="add-list-button"
                     onClick={handleCreateNewList}
                     className="playlister-button"
+
                     value="+" />
                 Your Lists
             </div>                {
