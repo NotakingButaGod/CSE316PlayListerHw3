@@ -69,7 +69,8 @@ export const useGlobalStore = () => {
                     idNamePairs: payload.idNamePairs,
                     currentList: payload.playlist,
                     newListCounter: store.newListCounter,
-                    listNameActive: false
+                    listNameActive: false,
+                    //editactive: true
                 });
             }
             // STOP EDITING THE CURRENT LIST
@@ -573,7 +574,7 @@ export const useGlobalStore = () => {
         }
     }
     document.onkeydown = (event) => handlekeydown(event, this);
-
+    
 
     // THIS FUNCTION ENABLES THE PROCESS OF EDITING A LIST NAME
     store.setIsListNameEditActive = function () {

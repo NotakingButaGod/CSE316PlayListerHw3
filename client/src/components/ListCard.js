@@ -42,12 +42,12 @@ function ListCard(props) {
     function handleKeyPress(event) {
         if (event.code === "Enter") {
             let id = event.target.id.substring("list-".length);
-            store.changeListName(id, text);
+            store.changeListName(id, event.target.value);
             toggleEdit();
         }
     }
     function handleUpdateText(event) {
-        setText(event.target.value );
+        setText(event.target.value);
     }
     function handleDelete(event){
         // trigger marked list

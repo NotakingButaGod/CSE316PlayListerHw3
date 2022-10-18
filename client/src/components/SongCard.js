@@ -10,7 +10,6 @@ function SongCard(props) {
         //console.log(index);
         event.stopPropagation();
         store.MarkSongForDeletion(store.currentList, song, index);
-
     }
     function handleEditSong(event){
         //console.log(song);
